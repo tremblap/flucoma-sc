@@ -71,7 +71,15 @@ w.front;
 // make a grid out of it
 ~grid = FluidGrid(s);
 ~gridified = FluidDataSet(s);
-~grid.fitTransform(~raw, ~gridified, action:{~gridified.dump{|x| ~gridifiedDict = x["data"]; \gridded.postln;}})
+(
+~grid.fitTransform(~raw, ~gridified, action:{
+	|x|x.postln; // returns the x-y dimensions of the newly created grid. The grid coordinates are zero-counting.
+	~gridified.dump{|x|
+		~gridifiedDict = x["data"];
+		\gridded.postln;
+		}
+	}
+)
 
 // watch the grid
 (
@@ -155,7 +163,7 @@ w.front;
 
 //Force the UMAP-reduced dataset into a grid, normalise for viewing then print in another window
 (
-~grid.fitTransform(~reduced,~gridified,action:{"Gridded Output".postln;
+~grid.fitTransform(~reduced,~gridified,action:{|dim| "Gridded Output of dimensions % by %\n".postf(dim[0], dim[1]);
 	~normalizer.fitTransform(~gridified,~normalized,action:{"Normalized Output".postln;
 		~normalized.dump{|x|
 			~normalizedDict = x["data"];
@@ -178,12 +186,13 @@ w.front;
 });
 )
 
-// We can check the dimensions of the yielded grid by dumping the normalisation.The grid coordinates are zero-counting
+// We get the dimensions of the yielded grid
+// We can also get them by dumping the normalisation. This gives the maximum value instead of the number of items (zero counted)
 ~normalizer.dump{|x|x["data_max"].postln}
 
 // This looks ok, but let's improve it with oversampling
 (
-~grid.oversample_(3).fitTransform(~reduced,~gridified,action:{"Gridded Output".postln;
+~grid.oversample_(3).fitTransform(~reduced,~gridified,action:{|dim| "Gridded Output of dimensions % by %\n".postf(dim[0], dim[1]);
 	~normalizer.fitTransform(~gridified,~normalized,action:{"Normalized Output".postln;
 		~normalized.dump{|x|
 			~normalizedDict = x["data"];

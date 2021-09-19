@@ -14,7 +14,7 @@ FluidGrid : FluidModelObject {
     }
 
 	fitTransform{|sourceDataSet, destDataSet, action|
-        actions[\fitTransform] = [nil,action];
+        actions[\fitTransform] = [numbers(FluidMessageResponse,_,2,_),action];
         this.fitTransformMsg(sourceDataSet,destDataSet);
 		this.prSendMsg(this.fitTransformMsg(sourceDataSet,destDataSet));
 	}
